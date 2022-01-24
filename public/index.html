@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Calculate</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+    <h1>Dice Simulator</h1>
+    <p>
+      <label>
+        Number of sides (2-20)
+      </br>
+        <input name="sides" id="sides" type="number" min="2" max="20" value="6"/>
+      </label>
+    </p>
+
+    <p>
+      <label>
+        Number of dice (1-80)
+      </br>
+      <input name="dice" id="dice" type="number" min="1" max="80" value="1"/>
+      </label>
+    </p>
+
+    <button id="rollDice">Roll Dice</button>
+
+    <div id="result"></div>
+  </body>
+
+  <script>
+    // getting all elements as variables
+    // make sure, ids are labelled exactly as in the html code above
+    const sides = document.getElementById("sides");
+    const dice = document.getElementById("dice");
+    const button = document.getElementById("rollDice");
+   
+
+    // handling the button click
+    button.addEventListener("click", async () => {
+      const dataToSend = {
+        sides: sides.value,
+        dice: dice.value,
+      };
+      const result = await fetch(`/rollDice`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataToSend),
+      });
+      const data = await result.json();
+      //output.innerHTML = `The result is ${data.diceResult}`;
+      showDiceRollResult(data);
+      console.log(data);
+
+      return false; // stop event from being propagated and a form from being submitted
+    });
+
+
+    function showDiceRollResult(data){
+      const output = document.getElementById("result");
+      output.innerHTML = "";
+
+      for (let i = 0; i < data.diceResult.length; i++){
+        let diceElement = document.createElement("div");
+        diceElement.classList.add("diceElement");
+
+        let diceNumber = document.createElement("p");
+        diceNumber.textContent = data.diceResult[i];
+        diceElement.appendChild(diceNumber);
+
+        output.appendChild(diceElement);
+      }
+      
+    }
+  </script>
+</html>
