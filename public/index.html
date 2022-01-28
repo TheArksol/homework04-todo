@@ -6,71 +6,66 @@
   </head>
 
   <body>
-    <h1>Dice Simulator</h1>
+    <h1>TODO List</h1>
+    <div id="content">
+    <div id="newEntry_container">
     <p>
       <label>
-        Number of sides (2-20)
+        New Entry
       </br>
-        <input name="sides" id="sides" type="number" min="2" max="20" value="6"/>
+      <input name="title" id="title"  max="50" placeholder="Title..."/>
       </label>
     </p>
 
     <p>
       <label>
-        Number of dice (1-80)
+        Text
       </br>
-      <input name="dice" id="dice" type="number" min="1" max="80" value="1"/>
+      <textarea name="text" id="text"  maxlength="250" placeholder="Text..."></textarea>
       </label>
     </p>
 
-    <button id="rollDice">Roll Dice</button>
+    <button id="newEntry">Add</button>
+  </div>
 
-    <div id="result"></div>
-  </body>
 
-  <script>
-    // getting all elements as variables
-    // make sure, ids are labelled exactly as in the html code above
-    const sides = document.getElementById("sides");
-    const dice = document.getElementById("dice");
-    const button = document.getElementById("rollDice");
+  <div id="todo_container">
+    <div>  <p>
+      <label>
+        Current TODOs
+        <ul id="list_todo">
+
+        </ul>
+      </label>
+    </p></div>
+
+    <div id="current_todo">
+      <label>
+        TODO Title
+      </br>
+        <input name="title" id="current_title"  max="50" placeholder="Title..."/> 
+      </label>
+
+      <p>
+        <label>
+          Text
+        </br>
+        <textarea name="text" id="current_text"  maxlength="250" placeholder="Text..."></textarea>
+        </label>
+      </p>
+
+      <button id="updateEntry" onclick="database_update()">Update</button>
+      <button id="deleteEntry" onclick="database_delete()">Delete</button>
+    </div>
+  
+
+  </div>
+
+
+</div>
    
 
-    // handling the button click
-    button.addEventListener("click", async () => {
-      const dataToSend = {
-        sides: sides.value,
-        dice: dice.value,
-      };
-      const result = await fetch(`/rollDice`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dataToSend),
-      });
-      const data = await result.json();
-      //output.innerHTML = `The result is ${data.diceResult}`;
-      showDiceRollResult(data);
-      console.log(data);
-
-      return false; // stop event from being propagated and a form from being submitted
-    });
-
-
-    function showDiceRollResult(data){
-      const output = document.getElementById("result");
-      output.innerHTML = "";
-
-      for (let i = 0; i < data.diceResult.length; i++){
-        let diceElement = document.createElement("div");
-        diceElement.classList.add("diceElement");
-
-        let diceNumber = document.createElement("p");
-        diceNumber.textContent = data.diceResult[i];
-        diceElement.appendChild(diceNumber);
-
-        output.appendChild(diceElement);
-      }
-      
-    }
-  </script>
+    
+  </body>
+  <script src="database.js"></script>
 </html>
